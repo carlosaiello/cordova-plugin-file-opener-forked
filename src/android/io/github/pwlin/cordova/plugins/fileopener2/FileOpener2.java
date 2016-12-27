@@ -92,7 +92,7 @@ public class FileOpener2 extends CordovaPlugin {
 		if (file.exists()) {
 			try {
 				Uri path = Uri.fromFile(file);
-				Intent intent = new Intent(Intent.ACTION_INSERT);
+				Intent intent = new Intent(Intent.ACTION_VIEW);
 				intent.setDataAndType(path, contentType);
 				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				/*
@@ -115,6 +115,41 @@ public class FileOpener2 extends CordovaPlugin {
 			callbackContext.error(errorObj);
 		}
 	}
+	
+	
+	
+	private void _insert(String fileArg, String contentType, CallbackContext callbackContext) throws JSONException {
+		String fileName = "";
+		try {
+			CordovaResourceApi resourceApi = webView.getResourceApi();
+			Uri fileUri = resourceApi.remapUri(Uri.parse(fileArg));
+			fileName = this.stripFileProtocol(fileUri.toString());
+		} catch (Exception e) {
+			fileName = fileArg;
+		}
+		File file = new File(fileName);
+		if (file.exists()) {
+			try {
+				Uri path = Uri.fromFile(file);
+				Intent intent = new Intent(Intent.ACTION_INSERT);
+				intent.setDataAndType(path, contentType);
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				cordova.getActivity().startActivity(intent);
+				callbackContext.success();
+			} catch (android.content.ActivityNotFoundException e) {
+				JSONObject errorObj = new JSONObject();
+				errorObj.put("status", PluginResult.Status.ERROR.ordinal());
+				errorObj.put("message", "Activity not found: " + e.getMessage());
+				callbackContext.error(errorObj);
+			}
+		} else {
+			JSONObject errorObj = new JSONObject();
+			errorObj.put("status", PluginResult.Status.ERROR.ordinal());
+			errorObj.put("message", "File not found");
+			callbackContext.error(errorObj);
+		}
+	}
+	
 	
 	private void _uninstall(String packageId, CallbackContext callbackContext) throws JSONException {
 		if (this._appIsInstalled(packageId)) {
