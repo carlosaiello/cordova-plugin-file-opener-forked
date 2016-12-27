@@ -55,6 +55,9 @@ public class FileOpener2 extends CordovaPlugin {
 		if (action.equals("open")) {
 			this._open(args.getString(0), args.getString(1), callbackContext);
 		} 
+		else if (action.equals("insert")) {
+			this._insert(args.getString(0), args.getString(1), callbackContext);
+		}
 		else if (action.equals("uninstall")) {
 			this._uninstall(args.getString(0), callbackContext);
 		}
