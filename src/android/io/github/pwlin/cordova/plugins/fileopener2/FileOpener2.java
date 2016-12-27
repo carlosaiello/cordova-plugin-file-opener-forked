@@ -134,7 +134,7 @@ public class FileOpener2 extends CordovaPlugin {
 		if (file.exists()) {
 			try {
 				Uri path = Uri.fromFile(file);
-				Intent intent = new Intent(Intent.ACTION_INSERT);
+				Intent intent = new Intent(Intent.ACTION_EDIT);
 				intent.setDataAndType(path, contentType);
 				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				cordova.getActivity().startActivity(intent);
